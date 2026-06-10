@@ -26,11 +26,14 @@ function extractId(arg: string): string | null {
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2).filter((a) => !a.startsWith('--'));
-  const ids = [...new Set(args.map(extractId).filter((v): v is string => Boolean(v)))];
-  if (ids.length === 0) {
+  if (args.length === 0) {
     console.error('Usage: tsx generate-selected.ts <id|url> [<id|url> ...]');
     process.exit(1);
   }
+
+  // Keep unparseable args visible — a pasted typo must not silently disappear.
+  const unparseable = args.filter((a) => !extractId(a));
+  const ids = [...new Set(args.map(extractId).filter((v): v is string => Boolean(v)))];
 
   const key = await loadYoutubeKey();
   const existingIds = await readExistingVideoIds();
@@ -38,25 +41,37 @@ async function main(): Promise<void> {
 
   const fresh = ids.filter((id) => !existingIds.has(id));
   const skipped = ids.filter((id) => existingIds.has(id));
-  if (skipped.length) console.log(`Skipping ${skipped.length} already in catalogue: ${skipped.join(', ')}`);
+  if (skipped.length) console.log(`Already in catalogue (ok, skipped): ${skipped.join(', ')}`);
 
   const videos = await fetchByIds(key, fresh);
-  console.log(`Generating ${videos.length} entr(y/ies)`);
+  // Videos requested but not returned (deleted, private, region-locked, or a bad
+  // id) — these are approved selections that would otherwise vanish silently.
+  const returnedIds = new Set(videos.map((v) => v.videoId));
+  const notFound = fresh.filter((id) => !returnedIds.has(id));
 
+  console.log(`Generating ${videos.length} entr(y/ies)`);
   let ok = 0;
-  let failed = 0;
+  const writeFailed: string[] = [];
   for (const v of videos) {
     try {
       const slug = await writeTutorial(v, takenSlugs);
       ok++;
       console.log(`  + ${slug} <- ${v.videoId} (${v.author})`);
     } catch (e) {
-      failed++;
-      console.error(`  ! failed ${v.videoId}: ${(e as Error).message}`);
+      writeFailed.push(v.videoId);
+      console.error(`  ! write failed ${v.videoId}: ${(e as Error).message}`);
     }
   }
-  console.log(`Done: ${ok} written, ${failed} failed`);
-  if (failed > 0) process.exitCode = 2;
+
+  console.log(`Done: ${ok} written, ${skipped.length} already present`);
+  const problems: string[] = [];
+  if (unparseable.length) problems.push(`unparseable args: ${unparseable.join(', ')}`);
+  if (notFound.length) problems.push(`not found on YouTube: ${notFound.join(', ')}`);
+  if (writeFailed.length) problems.push(`write failed: ${writeFailed.join(', ')}`);
+  if (problems.length) {
+    console.error(`\nNot generated — ${problems.join(' | ')}`);
+    process.exitCode = 2;
+  }
 }
 
 void main();

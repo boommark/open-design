@@ -69,7 +69,11 @@ async function postToFeishu(webhook: string, secret: string | undefined, text: s
     body: JSON.stringify(body),
   });
   const json = (await res.json().catch(() => ({}))) as { code?: number; msg?: string; StatusCode?: number };
-  if (!res.ok || (json.code && json.code !== 0)) {
+  // Feishu signals failure with a non-zero `code` (new format) OR a non-zero
+  // `StatusCode` (legacy format), both returned on an HTTP 200. Treat either as
+  // a failure so a digest that never reached the group does not look posted.
+  const failed = !res.ok || (json.code != null && json.code !== 0) || (json.StatusCode != null && json.StatusCode !== 0);
+  if (failed) {
     throw new Error(`Feishu webhook failed: HTTP ${res.status} ${JSON.stringify(json).slice(0, 200)}`);
   }
 }
