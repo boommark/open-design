@@ -512,13 +512,6 @@
       "holdMs": 2500,
       "hash": "ecc18d0a048ac52d"
     },
-    "example-shamoni": {
-      "video": "example-shamoni.165299646863da4d.mp4",
-      "poster": "example-shamoni.165299646863da4d.poster.jpg",
-      "durationMs": 7500,
-      "holdMs": 2500,
-      "hash": "165299646863da4d"
-    },
     "example-skyelite-private-jets": {
       "video": "example-skyelite-private-jets.d1355e9690800ac9.mp4",
       "poster": "example-skyelite-private-jets.d1355e9690800ac9.poster.jpg",
