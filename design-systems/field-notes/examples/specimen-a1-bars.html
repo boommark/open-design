@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;600&family=Space+Mono:wght@400;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1280px; height:1600px; }
+  body {
+    font-family:'Inter',sans-serif; color:#15171A;
+    background-color:#F7F5EF;
+    background-image:radial-gradient(#E4E0D4 1.1px, transparent 1.1px);
+    background-size:26px 26px;
+    padding:56px 56px 40px; display:flex; flex-direction:column;
+  }
+  .badge {
+    display:inline-flex; align-items:center; gap:12px; align-self:flex-start;
+    font-family:'Space Mono',monospace; font-size:18px; letter-spacing:.1em;
+    border:2px solid #15171A; border-radius:999px; padding:10px 24px; background:#F7F5EF;
+  }
+  .badge .dot { color:#2170E4; }
+  h1 {
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:86px;
+    line-height:1.04; letter-spacing:-0.02em; margin-top:30px;
+  }
+  .circled { position:relative; display:inline-block; padding:0 12px; }
+  .circled svg.ring { position:absolute; left:-10px; top:-14px; width:calc(100% + 20px); height:calc(100% + 28px); overflow:visible; }
+  .sub { margin-top:24px; font-size:30px; color:#6A6D72; line-height:1.4; }
+  .sub b { color:#15171A; }
+
+  .chart { margin-top:44px; flex:1; display:flex; flex-direction:column; justify-content:space-between; }
+  .row { display:flex; align-items:center; }
+  .rlabel { width:330px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:30px; line-height:1.1; }
+  .rlabel small { display:block; font-family:'Space Mono',monospace; font-weight:400; font-size:16px; letter-spacing:.08em; color:#6A6D72; margin-top:5px; }
+  .track { flex:1; display:flex; align-items:center; gap:18px; }
+  .bar { height:62px; border-radius:0 14px 14px 0; background:#6A6D72; }
+  .bar.ghost { background:#B9BBB6; }
+  .bar.hero { background:#2170E4; }
+  .val { font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:32px; }
+  .val.heroval { color:#0B4DB8; }
+
+  .annot { display:flex; align-items:center; gap:28px; margin-top:6px; }
+  .callout {
+    position:relative; flex:1; background:#fff;
+    border:2px solid #15171A; border-radius:14px; padding:22px 26px; font-size:26px; line-height:1.35;
+  }
+  .callout b { color:#0B4DB8; }
+  .pen-note { font-family:'Caveat',cursive; font-weight:600; font-size:40px; color:#2170E4; transform:rotate(-2.5deg); width:330px; line-height:1.05; text-align:center; }
+
+  .source { font-family:'Space Mono',monospace; font-size:17px; letter-spacing:.06em; color:#6A6D72; margin-top:26px; }
+  .footer { margin-top:16px; border-top:1.5px solid #DDD9CC; padding-top:22px; display:flex; justify-content:space-between; align-items:center; }
+  .who { display:flex; align-items:center; gap:18px; }
+  .who img { width:64px; height:64px; border-radius:50%; border:2.5px solid #15171A; }
+  .who .name { font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; }
+  .who .url { font-family:'Space Mono',monospace; font-size:17px; color:#6A6D72; margin-top:3px; }
+  .prop { display:flex; align-items:center; gap:14px; }
+  .prop img { width:48px; height:48px; }
+  .prop .url { font-family:'Space Mono',monospace; font-size:17px; color:#6A6D72; }
+</style>
+</head>
+<body>
+  <div class="badge"><span class="dot">&#9679;</span>LINKEDIN VISUALS &middot; WHAT ACTUALLY WORKS</div>
+
+  <h1>Simple visuals win reactions. Dense ones win <span class="circled">saves.<svg class="ring" viewBox="0 0 200 90" preserveAspectRatio="none"><path d="M 32 12 C 95 -6, 196 8, 191 45 C 187 78, 100 92, 44 80 C 8 71, 2 38, 24 20" fill="none" stroke="#2170E4" stroke-width="3.5" stroke-linecap="round"/></svg></span></h1>
+
+  <p class="sub">Last 10 visual posts from 5 top GTM creators. <b>Median reactions</b> by format &mdash; but reposts ran <b>4&ndash;6&times; higher</b> on dense reference assets.</p>
+
+  <div class="chart">
+    <div class="row">
+      <div class="rlabel">Minimal list<small>25 WAYS TO X</small></div>
+      <div class="track"><div class="bar hero" style="width:600px"></div><div class="val heroval">2,599</div></div>
+    </div>
+    <div class="row">
+      <div class="rlabel">Split contrast<small>MYTH VS REALITY</small></div>
+      <div class="track"><div class="bar" style="width:225px"></div><div class="val">864</div></div>
+    </div>
+    <div class="row">
+      <div class="rlabel">Candid photo<small>NO DESIGN AT ALL</small></div>
+      <div class="track"><div class="bar" style="width:168px"></div><div class="val">634</div></div>
+    </div>
+    <div class="row">
+      <div class="rlabel">Playbook diagram<small>FLOWCHARTS, FRAMEWORKS</small></div>
+      <div class="track"><div class="bar" style="width:114px"></div><div class="val">416</div></div>
+    </div>
+    <div class="row">
+      <div class="rlabel">Tool-logo map<small>RADIAL STACK</small></div>
+      <div class="track"><div class="bar" style="width:66px"></div><div class="val">230</div></div>
+    </div>
+    <div class="row">
+      <div class="rlabel">Polished template<small>MAX DESIGN EFFORT</small></div>
+      <div class="track"><div class="bar ghost" style="width:22px"></div><div class="val" style="color:#B9BBB6">62</div></div>
+    </div>
+
+    <div class="annot">
+      <div class="callout"><b>Polish came last.</b> The most-designed asset in the sample was its worst performer. Utility density beats decoration.</div>
+      <div class="pen-note">make it useful,<br>not pretty &nearr;</div>
+    </div>
+  </div>
+
+  <div class="source">SOURCE: CREATOR STYLE AUDIT &middot; N=50 POSTS &middot; JUNE 2026</div>
+
+  <div class="footer">
+    <div class="who">
+      <img src="../assets/profile-photo.jpg" alt="">
+      <div><div class="name">Abhishek Ratna</div><div class="url">linkedin.com/in/abhishekratna</div></div>
+    </div>
+    <div class="prop">
+      <span class="url">www.pmmsherpa.com</span>
+      <img src="../assets/pmmsherpa-logo-round.svg" alt="">
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>PMM Sherpa · LinkedIn Overview Carousel</title>
+<style>
+  @page { size: 1080px 1080px; margin: 0; }
+  html, body { margin: 0; padding: 0; background: #e7eaf0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  .slide {
+    width: 1080px;
+    height: 1080px;
+    page-break-after: always;
+    break-after: page;
+    background: linear-gradient(180deg, #f8f9fd 0%, #f0f3fa 100%);
+    color: #191c1e;
+    box-sizing: border-box;
+    padding: 88px 96px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+  .slide:last-child { page-break-after: auto; }
+
+  @media screen {
+    body { padding: 40px; display: flex; flex-direction: column; gap: 40px; align-items: center; }
+    .slide { box-shadow: 0 16px 60px rgba(10,22,40,0.18); }
+  }
+
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  .wordmark { display: flex; align-items: center; gap: 16px; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; color: #191c1e; }
+  .wordmark .logo { width: 56px; height: 56px; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: #0058be;
+    padding: 9px 16px;
+    background: rgba(0, 88, 190, 0.06);
+    border: 1px solid rgba(0, 88, 190, 0.18);
+    border-radius: 999px;
+  }
+
+  .page-num {
+    position: absolute;
+    right: 96px; bottom: 64px;
+    font-size: 14px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #8a909a;
+  }
+
+  .headline {
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.06;
+    color: #191c1e;
+  }
+  .headline.xl { font-size: 92px; }
+  .headline.lg { font-size: 76px; }
+  .headline.md { font-size: 60px; }
+  .headline.sm { font-size: 48px; }
+
+  .accent {
+    background: linear-gradient(135deg, #0058be 0%, #2170e4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  @media print {
+    .accent {
+      background: none !important;
+      -webkit-background-clip: initial !important;
+      background-clip: initial !important;
+      -webkit-text-fill-color: #0058be !important;
+      color: #0058be !important;
+    }
+  }
+
+  .subline {
+    font-size: 26px;
+    line-height: 1.45;
+    color: #4a4f57;
+    font-weight: 500;
+    max-width: 880px;
+  }
+  .subline.lg { font-size: 30px; }
+
+  .body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 28px; margin-top: 16px; }
+
+  .byline {
+    display: flex; align-items: center; gap: 18px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(0, 88, 190, 0.12);
+  }
+  .byline-logo { width: 48px; height: 48px; flex-shrink: 0; }
+  .who { font-size: 22px; font-weight: 700; color: #191c1e; line-height: 1.3; }
+  .who span { display: block; font-size: 18px; color: #5f6368; font-weight: 500; }
+
+  .clients { display: flex; align-items: flex-start; gap: 32px; margin-top: 24px; }
+  .client { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .client .chip { width: 88px; height: 88px; border-radius: 22px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(0, 88, 190, 0.06); }
+  .client .chip img { width: 52px; height: 52px; object-fit: contain; }
+  .client .name { font-size: 16px; font-weight: 600; color: #4a4f57; letter-spacing: -0.005em; }
+  .client.claude .chip { background: #fbeee5; }
+  .client.gpt .chip { background: #f1f5f4; }
+  .client.code .chip { background: #fbeee5; }
+  .client.antigrav .chip { background: #f3edff; }
+
+  /* problem list — slide 2 */
+  .problems { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+  .problem-row {
+    display: flex; align-items: flex-start; gap: 18px;
+    padding: 18px 22px;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(0, 88, 190, 0.10);
+    border-radius: 14px;
+  }
+  .problem-num {
+    flex-shrink: 0;
+    font-size: 22px; font-weight: 800; letter-spacing: -0.02em;
+    color: #0058be;
+    width: 36px;
+  }
+  .problem-text { font-size: 22px; line-height: 1.4; color: #191c1e; font-weight: 600; }
+  .problem-text span { display: block; font-size: 18px; color: #5f6368; font-weight: 500; margin-top: 4px; line-height: 1.4; }
+
+  /* jobs grid — slide 4 */
+  .jobs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 8px;
+  }
+  .job-card {
+    padding: 26px 28px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 88, 190, 0.12);
+    border-radius: 18px;
+  }
+  .job-num { font-size: 14px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #0058be; }
+  .job-name { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; color: #191c1e; margin-top: 6px; line-height: 1.15; }
+  .job-desc { font-size: 17px; color: #4a4f57; font-weight: 500; line-height: 1.4; margin-top: 8px; }
+
+  /* screenshot card */
+  .shot-wrap {
+    height: 480px;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 4px;
+  }
+  .shot {
+    max-width: 100%;
+    max-height: 480px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 18px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.6) inset,
+      0 24px 60px rgba(10, 22, 40, 0.16),
+      0 4px 12px rgba(10, 22, 40, 0.06);
+    border: 1px solid rgba(0, 88, 190, 0.10);
+    background: #ffffff;
+  }
+  .shot.dark { background: #1e1e1e; }
+
+  .caption { font-size: 22px; color: #4a4f57; font-weight: 500; line-height: 1.4; max-width: 880px; margin-top: 4px; }
+
+  /* corpus stats — slide 7 */
+  .stats { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+  .stat-row { display: flex; align-items: baseline; gap: 28px; padding: 18px 0; border-bottom: 1px solid rgba(0, 88, 190, 0.10); }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-num { font-size: 56px; font-weight: 800; letter-spacing: -0.025em; line-height: 1; color: #191c1e; min-width: 240px; }
+  .stat-label { font-size: 22px; color: #4a4f57; font-weight: 500; line-height: 1.4; }
+
+  /* testimonials — slide 8 */
+  .quotes { display: flex; flex-direction: column; gap: 18px; margin-top: 8px; }
+  .quote {
+    padding: 22px 26px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 88, 190, 0.10);
+    border-radius: 16px;
+    display: flex; gap: 18px; align-items: flex-start;
+  }
+  .quote .avatar { width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0; object-fit: cover; border: 1px solid rgba(0, 88, 190, 0.12); background: #f1f5f9; }
+  .quote .avatar.placeholder { display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: #0058be; background: #e6efff; }
+  .quote .body-q { flex: 1; }
+  .quote .text { font-size: 17px; line-height: 1.5; color: #191c1e; font-weight: 500; font-style: italic; }
+  .quote .who-q { font-size: 14px; color: #5f6368; font-weight: 600; margin-top: 8px; line-height: 1.35; }
+  .quote .who-q span { color: #8a909a; font-weight: 500; }
+
+  /* two-surface split — slide 9 */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 8px; }
+  .surface {
+    padding: 22px;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(0, 88, 190, 0.10);
+    border-radius: 18px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .surface .label { font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #0058be; }
+  .surface .name { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; color: #191c1e; line-height: 1.15; }
+  .surface .desc { font-size: 16px; color: #4a4f57; font-weight: 500; line-height: 1.4; }
+  .surface .frame { height: 280px; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #ffffff; border: 1px solid rgba(0, 88, 190, 0.08); }
+  .surface .frame img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .surface .mini-clients { display: flex; gap: 10px; flex-wrap: wrap; }
+  .mini-client { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #ffffff; border: 1px solid rgba(0, 88, 190, 0.10); border-radius: 999px; font-size: 14px; font-weight: 600; color: #191c1e; }
+  .mini-client img { width: 18px; height: 18px; object-fit: contain; }
+
+  /* CTA — slide 10 */
+  .cta-stack { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+  .cta-card {
+    padding: 26px 28px;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(0, 88, 190, 0.14);
+    border-radius: 18px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .cta-card.primary {
+    background: linear-gradient(135deg, rgba(0, 88, 190, 0.08) 0%, rgba(33, 112, 228, 0.06) 100%);
+    border-color: rgba(0, 88, 190, 0.28);
+  }
+  .cta-step { font-size: 14px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #0058be; }
+  .cta-name { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; color: #191c1e; line-height: 1.15; }
+  .cta-desc { font-size: 18px; color: #4a4f57; font-weight: 500; line-height: 1.4; }
+  .cta-desc code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Cascadia Mono", Consolas, monospace; font-size: 15px; background: rgba(0, 88, 190, 0.08); padding: 2px 7px; border-radius: 6px; color: #0058be; }
+  .cta-link { font-size: 18px; font-weight: 700; color: #0058be; }
+
+  /* hero clients chip strip — smaller for slide 1 */
+  .hero-clients { display: flex; gap: 14px; margin-top: 24px; flex-wrap: wrap; }
+  .hero-chip { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(0, 88, 190, 0.14); border-radius: 999px; font-size: 16px; font-weight: 600; color: #191c1e; }
+  .hero-chip img { width: 22px; height: 22px; object-fit: contain; }
+</style>
+</head>
+<body>
+
+<!-- ─────────────── SLIDE 1: HERO ─────────────── -->
+<div class="slide">
+  <div class="top">
+    <div class="wordmark">
+      <svg class="logo" viewBox="0 0 512 512">
+        <defs>
+          <linearGradient id="lg-1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0058be"/><stop offset="100%" stop-color="#2170e4"/>
+          </linearGradient>
+        </defs>
+        <circle cx="256" cy="256" r="256" fill="url(#lg-1)"/>
+        <polyline points="89.33,389.33 172.67,222.67 256,322.67 322.67,156 422.67,389.33"
+          fill="none" stroke="white" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      PMM Sherpa
+    </div>
+    <div class="eyebrow">Overview</div>
+  </div>
+
+  <div class="body">
+    <div class="headline lg">
+      The senior PMM,<br/>
+      <span class="accent">in your pocket.</span><br/>
+      And in your agent's stack.
+    </div>
+    <div class="subline lg">
+      A product marketing advisor trained on 38,000+ chunks of senior PMM thinking. Used by humans in a chat UI. Wired into agents over MCP.
+    </div>
+
+    <div class="hero-clients">
+      <div class="hero-chip"><img src="assets/clients/claude.svg" alt=""/>Claude</div>
+      <div class="hero-chip"><img src="assets/clients/chatgpt.png" alt=""/>ChatGPT</div>
+      <div class="hero-chip"><img src="assets/clients/claude-code.png" alt=""/>Claude Code</div>
+      <div class="hero-chip"><img src="assets/clients/antigravity.png" alt=""/>Antigravity</div>
+    </div>
+  </div>
+
+  <div class="byline">
+    <svg class="byline-logo" viewBox="0 0 512 512"><circle cx="256" cy="256" r="256" fill="url(#lg-1)"/><polyline points="89.33,389.33 172.67,222.67 256,322.67 322.67,156 422.67,389.33" fill="none" stroke="white" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="who">pmmsherpa.com<span>Trusted by hundreds of PMMs across 100+ orgs</span></div>
+  </div>
+</div>
+
+<!-- ─────────────── SLIDE 2: THE PROBLEM ─────────────── -->
+<div class="slide">
+  <div class="top">
+    <div class="wordmark"><svg class="logo" viewBox="0 0 512 512"><circle cx="256" cy="256" r="256" fill="url(#lg-1)"/><polyline points="89.33,389.33 172.67,222.67 256,322.67 322.67,156 422.67,389.33" fill="none" stroke="white" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/></svg>PMM Sherpa</div>
+    <div class="eyebrow">The problem</div>
+  </div>
+  <div class="body">
+    <div class="headline md">
+      PMMs make<br/><span class="accent">50 judgment calls a week.</span><br/>Mostly alone.
+    </div>
+    <div class="problems">
+      <div class="problem-row"><div class="problem-num">01</div><div class="problem-text">Is our positioning actually different, or just louder?<span>The answer rarely lives in your CRM.</span></div></div>
+      <div class="problem-row"><div class="problem-num">02</div><div class="problem-text">Why are we losing to a worse competitor?<span>Battlecard work that should take an hour takes a week.</span></div></div>
+      <div class="problem-row"><div class="problem-num">03</div><div class="problem-text">Is this homepage converting, or just performing on Dribbble?<span>You need a senior eye, not another tool.</span></div></div>
+      <div class="problem-row"><div class="problem-num">04</div><div class="problem-text">A general-purpose LLM dresses up your thinking.<span>It does not bring frameworks, war stories, or a point of view.</span></div></div>
+    </div>
+  </div>
+  <div class="page-num">02 / 10</div>
+</div>
+
+<!-- ─────────────── SLIDE 3: MEET PMM SHERPA ─────────────── -->
+<div class="slide">
+  <div class="top">
+    <div class="wordmark"><svg class="logo" viewBox="0 0 512 512"><circle cx="256" cy="256" r="256" fill="url(#lg-1)"/><polyline points="89.33,389.33 172.67,222.67 256,322.67 322.67,156 422.67,389.33" fill="none" stroke="white" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/></svg>PMM Sherpa</div>
+    <div class="eyebrow">Meet PMM Sherpa</div>
+  </div>
+  <div class="body">
+    <div class="headline lg">
+      Used by humans.<br/>
+      Wired into <span class="accent">agents.</span>
+    </div>
+    <div class="subline lg">
+      Sherpa shows up two ways. As a chat product where you ship work in minutes. And as an MCP server, so the AI tools and agents you already use can think like a senior PMM, not a clever junior.
+    </div>
+    <div class="subline" style="font-size: 22px; color: #5f6368;">
+      Same brain. Same canon. Same point of view. Wherever you work.
+    </div>
+  </div>
+  <div class="page-num">03 / 10</div>
+</div>
+
+<!-- ─────────────── SLIDE 4: THE 6 JOBS ─────────────── -->
+<div class="slide">
+  <div class="top">
+    <div class="wordmark"><svg class="logo" viewBox="0 0 512 512"><circle cx="256" cy="256" r="256" fill="url(#lg-1)"/><polyline points="89.33,389.33 172.67,222.67 256,322.67 322.67,156 422.67,389.33" fill="none" stroke="white" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/></svg>PMM Sherpa</div>
+    <div class="eyebrow">What PMMs use it for</div>
+  </div>
+  <div class="body">
+    <div class="headline sm">
+      Six jobs PMMs run on Sherpa<br/>
+      <span class="accent">every week.</span>
+    </div>
+    <div class="jobs">
+      <div class="job-card"><div class="job-num">01</div><div class="job-name">Landing page audit</div><div class="job-desc">Cited critique on positioning, hero, social proof, conversion friction.</div></div>
+      <div class="job-card"><div class="job-num">02</div><div class="job-name">Positioning sharpener</div><div class="job-desc">From category and ICP to the one sentence your buyer remembers.</div></div>
+      <div class="job-card"><div class="job-num">03</div><div class="job-name">Battlecard from a prompt</div><div class="job-desc">Why-we-win, why-they-win, traps and trigger lines, in one pass.</div></div>
+      <div class="job-card"><div class="job-num">04</div><div class="job-name">GTM and launch plan</div><div class="job-desc">Tier, narrative, channel mix, internal enablement, day-one to day-thirty.</div></div>
+      <div class="job-card"><div class="job-num">05</div><div class="job-name">Pricing pressure-test</div><div class="job-desc">Anchor logic, packaging shape, willingness-to-pay signal, where it leaks.</div></div>
+      <div class="job-card"><div class="job-num">06</div><div class="job-name">Messaging house</div><div class="job-desc">Pillars, proof, value props that map to actual buyer questions.</div></div>
+    </div>
+  </div>
+  <div class="page-num">04 / 10</div>
+</div>
+
+<!-- ─────────────── SLIDE 5: JOB IN THE WEB UI ─────────────── -->
+<div class="slide">
+  <div class="top">
+    <div class="wordmark"><svg class="logo" viewBox="0 0 512 512"><circle cx="256" cy="256" r="256" fill="url(#lg-1)"/><polyline points="89.33,389.33 172.67,222.67 256,322.67 322.67,156 422.67,389.33" fill="none" stroke="white" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/></svg>PMM Sherpa</div>
+    <div class="eyebrow">Job 01 · Web app</div>
+  </div>
+  <div class="body">
+    <div class="headline sm">
+      "Audit www.stripe.com."<br/>
+      <span class="accent">One prompt. Cited audit.</span>
+    </div>
+    <div class="caption">Sherpa returns the structured critique a senior PMM would give in a working session. Frameworks named, examples cited, point of view intact.</div>
+    <div class="shot-wrap">
+      <img class="shot" src="assets/screenshots/sherpa-ui-stripe-audit.png" alt="PMM Sherpa web UI auditing stripe.com"/>
+    </div>
+  </div>
+  <div class="page-num">05 / 10</div>
+</div>
+
+<!-- ─────────────── SLIDE 6: JOB IN AN AGENT ─────────────── -->
+<div class="slide">
+  <div class="top">
+    <div class="wordmark"><svg class="logo" viewBox="0 0 512 512"><circle cx="256" cy="256" r="256" fill="url(#lg-1)"/><polyline points="89.33,389.33 172.67,222.67 256,322.67 322.67,156 422.67,389.33" fill="none" stroke="white" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/></svg>PMM Sherpa</div>
+    <div class="eyebrow">Job 03 · Inside ChatGPT</div>
+  </div>
+  <div class="body">
+    <div class="headline sm">
+      Battlecards from<br/>
+      <span class="accent">a single prompt.</span>
+    </div>
+    <div class="caption">Hand ChatGPT a website plus a competitor. Sherpa drafts the framing, the citations, and the structure inside the surface you already use.</div>
+    <div class="shot-wrap">
+      <img class="shot" src="assets/screenshots/pmmsherpa_mcp_chatgpt.png" alt="PMM Sherpa drafting a battlecard inside ChatGPT"/>
+    </div>
+  </div>
+  <div class="page-num">06 / 10</div>
+</div>
+
+<!-- ─────────────── SLIDE 7: BUILT ON THE CANON ─────────────── -->
+<div class="slide">
+  <div class="top">
+    <div class="wordmark"><svg class="logo" viewBox="0 0 512 512"><circle cx="256" cy="256" r="256" fill="url(#lg-1)"/><polyline points="89.33,389.33 172.67,222.67 256,322.67 322.67,156 422.67,389.33" fill="none" stroke="white" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/></svg>PMM Sherpa</div>
+    <div class="eyebrow">Built on the canon</div>
+  </div>
+  <div class="body">
+    <div class="headline lg">
+      <span class="accent">38,000+ chunks</span><br/>of senior PMM thinking.
+    </div>
+    <div class="stats">
+      <div class="stat-row"><div class="stat-num">34</div><div class="stat-label">Books from the field's most cited authors</div></div>
+      <div class="stat-row"><div class="stat-num">583</div><div class="stat-label">Podcast episodes from PMM operators and founders</div></div>
+      <div class="stat-row"><div class="stat-num">532</div><div class="stat-label">Practitioner AMAs (Zendesk, AWS, SurveyMonkey, Miro, Enable)</div></div>
+      <div class="stat-row"><div class="stat-num">1,640+</div><div class="stat-label">Blog posts and thought-leader essays across PMM, GTM, and pricing</div></div>
+    </div>
+  </div>
+  <div class="page-num">07 / 10</div>
+</div>
+
+<!-- ─────────────── SLIDE 8: TESTIMONIALS ─────────────── -->
+<div class="slide">
+  <div class="top">
+    <div class="wordmark"><svg class="logo" viewBox="0 0 512 512"><circle cx="256" cy="256" r="256" fill="url(#lg-1)"/><polyline points="89.33,389.33 172.67,222.67 256,322.67 322.67,156 422.67,389.33" fill="none" stroke="white" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/></svg>PMM Sherpa</div>
+    <div class="eyebrow">What real PMMs say</div>
+  </div>
+  <div class="body">
+    <div class="headline sm">
+      Not "AI that helps."<br/>
+      <span class="accent">A senior PMM that pushes back.</span>
+    </div>
+    <div class="quotes">
+      <div class="quote">
+        <img class="avatar" src="assets/avatars/brian-remmel.jpeg" alt=""/>
+        <div class="body-q">
+          <div class="text">"PMMSherpa feels like working with an experienced partner. The frameworks are built in, and its strong point of view challenges my thinking in ways other tools don't."</div>
+          <div class="who-q">Brian Remmel <span>· Principal PMM, Palo Alto Networks</span></div>
+        </div>
+      </div>
+      <div class="quote">
+        <img class="avatar" src="assets/avatars/asli-simsek.png" alt=""/>
+        <div class="body-q">
+          <div class="text">"Most AI tools make you do the thinking and then dress it up. Sherpa does the opposite. It comes in educated, applies the right frameworks, and pushes back when your reasoning isn't there yet."</div>
+          <div class="who-q">Asli Simsek <span>· PMM, CMO Alliance Member</span></div>
+        </div>
+      </div>
+      <div class="quote">
+        <div class="avatar placeholder">F2</div>
+        <div class="body-q">
+          <div class="text">"The output isn't just fast; it's grounded in real-world frameworks and actual PMM experience. It's levels above what I get from a general-purpose model like Claude."</div>
+          <div class="who-q">VP of Product Marketing <span>· Fortune 200 ERP Provider</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">08 / 10</div>
+</div>
+
+<!-- ─────────────── SLIDE 9: TWO SURFACES, ONE BRAIN ─────────────── -->
+<div class="slide">
+  <div class="top">
+    <div class="wordmark"><svg class="logo" viewBox="0 0 512 512"><circle cx="256" cy="256" r="256" fill="url(#lg-1)"/><polyline points="89.33,389.33 172.67,222.67 256,322.67 322.67,156 422.67,389.33" fill="none" stroke="white" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/></svg>PMM Sherpa</div>
+    <div class="eyebrow">Two surfaces, one brain</div>
+  </div>
+  <div class="body">
+    <div class="headline sm">
+      Use it as a product.<br/>
+      Or wire it into <span class="accent">your stack.</span>
+    </div>
+    <div class="split">
+      <div class="surface">
+        <div class="label">Web app</div>
+        <div class="name">For working sessions</div>
+        <div class="desc">Open pmmsherpa.com, drop a prompt, ship a positioning doc, audit, or battlecard in one sitting.</div>
+        <div class="frame"><img src="assets/screenshots/sherpa-ui-welcome.png" alt="PMM Sherpa welcome state"/></div>
+      </div>
+      <div class="surface">
+        <div class="label">MCP server</div>
+        <div class="name">For agents and tools</div>
+        <div class="desc">One URL, OAuth, four tools. Reason like a senior PMM inside Claude, ChatGPT, Claude Code, Antigravity.</div>
+        <div class="mini-clients">
+          <div class="mini-client"><img src="assets/clients/claude.svg" alt=""/>Claude</div>
+          <div class="mini-client"><img src="assets/clients/chatgpt.png" alt=""/>ChatGPT</div>
+          <div class="mini-client"><img src="assets/clients/claude-code.png" alt=""/>Claude Code</div>
+          <div class="mini-client"><img src="assets/clients/antigravity.png" alt=""/>Antigravity</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">09 / 10</div>
+</div>
+
+<!-- ─────────────── SLIDE 10: GET STARTED ─────────────── -->
+<div class="slide">
+  <div class="top">
+    <div class="wordmark"><svg class="logo" viewBox="0 0 512 512"><circle cx="256" cy="256" r="256" fill="url(#lg-1)"/><polyline points="89.33,389.33 172.67,222.67 256,322.67 322.67,156 422.67,389.33" fill="none" stroke="white" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/></svg>PMM Sherpa</div>
+    <div class="eyebrow">Get started</div>
+  </div>
+  <div class="body" style="gap: 18px;">
+    <div class="headline sm">
+      Try it. Then plug it<br/>
+      into <span class="accent">everything else.</span>
+    </div>
+
+    <div class="cta-stack">
+      <div class="cta-card primary">
+        <div class="cta-step">Step 01 · Free</div>
+        <div class="cta-name">Try the chat at pmmsherpa.com</div>
+        <div class="cta-desc">10 free messages. Sign in with Google. No card. Starter at $9.99/mo when you want unlimited.</div>
+      </div>
+      <div class="cta-card">
+        <div class="cta-step">Step 02 · Free</div>
+        <div class="cta-name">Install the MCP server</div>
+        <div class="cta-desc">In Claude.ai or ChatGPT, add custom connector with <code>pmmsherpa.com/api/mcp</code>. In Claude Code, run <code>claude mcp add --transport http pmm-sherpa https://pmmsherpa.com/api/mcp</code>.</div>
+      </div>
+      <div class="cta-card">
+        <div class="cta-step">Docs and source</div>
+        <div class="cta-name">github.com/boommark/pmmsherpa-mcp</div>
+        <div class="cta-desc">Reusable PMM Sherpa skill, example workflows, and per-client setup guides.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-num">10 / 10</div>
+
+  <div class="byline">
+    <svg class="byline-logo" viewBox="0 0 512 512"><circle cx="256" cy="256" r="256" fill="url(#lg-1)"/><polyline points="89.33,389.33 172.67,222.67 256,322.67 322.67,156 422.67,389.33" fill="none" stroke="white" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="who">pmmsherpa.com<span>The senior PMM, in your pocket. And in your agent's stack.</span></div>
+  </div>
+</div>
+
+</body>
+</html>
