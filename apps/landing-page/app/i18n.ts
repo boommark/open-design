@@ -914,6 +914,10 @@ export interface LandingUiCopy {
     noEntries: string;
     suggestVideo: string;
     noCategory: string;
+    contributeTitle: string;
+    contributeBody: string;
+    contributeCta: string;
+    contributeSuggest: string;
     thumbnailAlt: (title: string) => string;
     detailTitle: (title: string) => string;
     localizedTitle: (title: string, author: string) => string;
@@ -3433,6 +3437,11 @@ const LANDING_UI_COPY: LandingUiCopy = {
     noEntries: "No tutorials yet. We're curating the first batch — check back soon, or",
     suggestVideo: 'suggest a video',
     noCategory: 'No tutorials in this category yet. More are on the way.',
+    contributeTitle: 'Made an Open Design tutorial?',
+    contributeBody:
+      'Share your video with the community. Open a quick pull request with the details and it will appear here once a maintainer reviews it.',
+    contributeCta: 'Contribute a tutorial ↗',
+    contributeSuggest: 'Or suggest a video ↗',
     thumbnailAlt: (title) => `Thumbnail for ${title}`,
     detailTitle: (title) => `${title} — Open Design Tutorials`,
     localizedTitle: (title) => title,
@@ -3719,6 +3728,11 @@ const LANDING_UI_COPY_OVERRIDES: Partial<
       noEntries: '暂时还没有教程。我们正在整理第一批视频，请稍后再来，或者',
       suggestVideo: '推荐一个视频',
       noCategory: '这个分类还没有教程，更多内容正在整理。',
+      contributeTitle: '做过 Open Design 的教程？',
+      contributeBody:
+        '把你的视频分享给社区。提一个简单的 Pull Request 填上信息，维护者审核通过后就会出现在这里。',
+      contributeCta: '贡献一个教程 ↗',
+      contributeSuggest: '或推荐一个视频 ↗',
       thumbnailAlt: (title) => `${title} 的视频封面`,
       detailTitle: (title) => `${title} — Open Design 教程`,
       localizedTitle: (_title, author) => `Open Design 教程：${author}`,
@@ -3987,6 +4001,11 @@ const LANDING_UI_COPY_OVERRIDES: Partial<
       noEntries: '暫時還沒有教學。我們正在整理第一批影片，請稍後再來，或者',
       suggestVideo: '推薦一支影片',
       noCategory: '這個分類還沒有教學，更多內容正在整理。',
+      contributeTitle: '做過 Open Design 的教學？',
+      contributeBody:
+        '把你的影片分享給社群。提一個簡單的 Pull Request 填上資訊，維護者審核通過後就會出現在這裡。',
+      contributeCta: '貢獻一個教學 ↗',
+      contributeSuggest: '或推薦一支影片 ↗',
       thumbnailAlt: (title) => `${title} 的影片封面`,
       detailTitle: (title) => `${title} — Open Design 教學`,
       localizedTitle: (_title, author) => `Open Design 教學：${author}`,
